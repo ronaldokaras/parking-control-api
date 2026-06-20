@@ -8,7 +8,7 @@ class VehicleCreate(BaseModel):
         ...,
         min_length=7,
         max_length=8,
-        pattern=r'^[A-Z]{3}-(?:[0-9]{4}|[0-9][A-Z][0-9]{2})$',
+        pattern=r'^[A-Za-z]{3}-(?:[0-9]{4}|[0-9][A-Za-z][0-9]{2})$',
         description="Placa no formato AAA-1234 ou AAA-1B23"
     )
     model: str
@@ -38,6 +38,12 @@ class TicketResponse(BaseModel):
     check_out: Optional[datetime]
     total_value: Optional[float]
     paid: int
-
+class ParkedVehicleResponse(BaseModel):
+    ticket_id: int
+    plate: str
+    model: str
+    color: str
+    check_in: datetime
+    minutes_parked: int
     class Config:
         from_attributes = True

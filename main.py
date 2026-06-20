@@ -1,11 +1,12 @@
 from fastapi import FastAPI, HTTPException, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from datetime import datetime
-from typing import List
+from typing import List 
 
 from database import SessionLocal, engine
 import models
 import schemas
+import math
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -64,8 +65,7 @@ def checkout(plate: str, db: Session = Depends(get_db)):
     # REGRA DE NEGÓCIO (15 minutos grátis)
     if total_minutes <= 15:
         active_ticket.total_value = 0.0
-    else:
-        import math
+    else:        
         hours = math.ceil(total_minutes / 60)
         active_ticket.total_value = hours * 5.0
     
@@ -84,3 +84,31 @@ def get_history(plate: str, db: Session = Depends(get_db)):
     
     tickets = db.query(models.ParkingTicket).filter(models.ParkingTicket.vehicle_id == vehicle.id).all()
     return tickets
+
+#Listar carros estacionados
+
+@app.get("/parked", response_model=List[schemas.ParkedVehicleResponse])
+def get_parked_vehicles(db: Session = Depends(get_db)):
+    # Faz JOIN entre ParkingTicket e Vehicle, carregando os dados do veículo junto
+    tickets_abertos = db.query(models.ParkingTicket)\
+        .options(joinedload(models.ParkingTicket.vehicle))\
+        .filter(models.ParkingTicket.check_out.is_(None))\
+        .all()
+
+    now = datetime.utcnow()
+    resultado = []
+    for ticket in tickets_abertos:
+        vehicle = ticket.vehicle
+        time_parked = now - ticket.check_in
+        minutes = int(time_parked.total_seconds() / 60)
+
+        resultado.append(schemas.ParkedVehicleResponse(
+            ticket_id=ticket.id,
+            plate=vehicle.plate,
+            model=vehicle.model,
+            color=vehicle.color,
+            check_in=ticket.check_in,
+            minutes_parked=minutes
+        ))
+
+    return resultado
