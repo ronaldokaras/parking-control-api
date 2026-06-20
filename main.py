@@ -21,6 +21,8 @@ def get_db():
 # CHECK-IN
 @app.post("/checkin", response_model=schemas.TicketResponse)
 def checkin(vehicle_data: schemas.VehicleCreate, db: Session = Depends(get_db)):
+    # Converter placa para maiúsculo
+    vehicle_data.plate = vehicle_data.plate.upper()
     existing_vehicle = db.query(models.Vehicle).filter(models.Vehicle.plate == vehicle_data.plate).first()
     
     if existing_vehicle:

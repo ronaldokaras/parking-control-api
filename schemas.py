@@ -1,11 +1,19 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
+import re
 
 class VehicleCreate(BaseModel):
-    plate: str
+    plate: str = Field(
+        ...,
+        min_length=7,
+        max_length=8,
+        pattern=r'^[A-Z]{3}-(?:[0-9]{4}|[0-9][A-Z][0-9]{2})$',
+        description="Placa no formato AAA-1234 ou AAA-1B23"
+    )
     model: str
     color: str
+
 
 class VehicleResponse(BaseModel):
     id: int
