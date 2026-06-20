@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
+import models
 
 # Importa sua aplicação e dependências
 from main import app, get_db
@@ -69,24 +70,16 @@ def test_checkin_invalid_plate(client):
     response = client.post("/checkin", json=vehicle_data)
     assert response.status_code == 422  # Erro de validação
 
-def test_checkin_auto_uppercase(client):
-    vehicle_data = {
-        "plate": "abc-1d23",
-        "model": "Onix",
-        "color": "Preto"
-    }
+def test_checkin_auto_uppercase(client, db_session):
+    vehicle_data = {"plate": "abc-1d23", "model": "Onix", "color": "Preto"}
     response = client.post("/checkin", json=vehicle_data)
     assert response.status_code == 200
     ticket = response.json()
-    # Verifica se a placa foi salva em maiúsculo
-    # Mas o ticket não tem o campo plate; precisamos pegar do veículo.
-    # Vamos fazer uma consulta extra? Ou adaptar o teste para verificar no banco.
-    # Podemos buscar o veículo pelo ID.
-    # Mas para simplificar, confiamos na lógica. 
-    # Podemos verificar que criou com sucesso e a resposta é 200.
-    # Futuramente, pode-se criar um endpoint de consulta de veículo.
-    # Aqui só verificamos que não deu erro.
-    pass
+    vehicle_id = ticket["vehicle_id"]
+    # Usa a sessão de teste para consultar o veículo
+    vehicle = db_session.query(models.Vehicle).filter(models.Vehicle.id == vehicle_id).first()
+    assert vehicle.plate == "ABC-1D23"
+    
 
 # --- Testes de Checkout ---
 

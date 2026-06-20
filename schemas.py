@@ -22,8 +22,7 @@ class VehicleResponse(BaseModel):
     color: str
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 class TicketCreate(BaseModel):
     plate: str
@@ -38,6 +37,8 @@ class TicketResponse(BaseModel):
     check_out: Optional[datetime]
     total_value: Optional[float]
     paid: int
+
+    model_config = {"from_attributes": True}
 class ParkedVehicleResponse(BaseModel):
     ticket_id: int
     plate: str
@@ -45,5 +46,5 @@ class ParkedVehicleResponse(BaseModel):
     color: str
     check_in: datetime
     minutes_parked: int
-    class Config:
-        from_attributes = True
+
+    model_config = {"from_attributes": True}

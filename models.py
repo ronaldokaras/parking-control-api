@@ -23,6 +23,6 @@ class ParkingTicket(Base):
     check_in = Column(DateTime, default=datetime.utcnow, nullable=False)
     check_out = Column(DateTime, nullable=True)
     total_value = Column(Float, nullable=True)
-    paid = Column(Integer, default=0)  # 0 = pendente, 1 = pago
+    paid = Column(Integer, default=0)
 
     vehicle = relationship("Vehicle", back_populates="tickets")

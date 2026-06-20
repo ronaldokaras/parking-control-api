@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session, joinedload
 from datetime import datetime
-from typing import List 
+from typing import List
 
 from database import SessionLocal, engine
 import models
@@ -22,14 +22,13 @@ def get_db():
 # CHECK-IN
 @app.post("/checkin", response_model=schemas.TicketResponse)
 def checkin(vehicle_data: schemas.VehicleCreate, db: Session = Depends(get_db)):
-    # Converter placa para maiúsculo
     vehicle_data.plate = vehicle_data.plate.upper()
     existing_vehicle = db.query(models.Vehicle).filter(models.Vehicle.plate == vehicle_data.plate).first()
     
     if existing_vehicle:
         vehicle = existing_vehicle
     else:
-        vehicle = models.Vehicle(**vehicle_data.dict())
+        vehicle = models.Vehicle(**vehicle_data.model_dump())
         db.add(vehicle)
         db.commit()
         db.refresh(vehicle)
@@ -41,7 +40,7 @@ def checkin(vehicle_data: schemas.VehicleCreate, db: Session = Depends(get_db)):
     
     return new_ticket
 
-# CHECK-OUT (com regra de 15min grátis)
+# CHECK-OUT
 @app.post("/checkout", response_model=schemas.TicketResponse)
 def checkout(plate: str, db: Session = Depends(get_db)):
     vehicle = db.query(models.Vehicle).filter(models.Vehicle.plate == plate).first()
@@ -62,7 +61,6 @@ def checkout(plate: str, db: Session = Depends(get_db)):
     time_diff = now - active_ticket.check_in
     total_minutes = int(time_diff.total_seconds() / 60)
     
-    # REGRA DE NEGÓCIO (15 minutos grátis)
     if total_minutes <= 15:
         active_ticket.total_value = 0.0
     else:        
@@ -85,11 +83,9 @@ def get_history(plate: str, db: Session = Depends(get_db)):
     tickets = db.query(models.ParkingTicket).filter(models.ParkingTicket.vehicle_id == vehicle.id).all()
     return tickets
 
-#Listar carros estacionados
-
+# LISTAR ESTACIONADOS
 @app.get("/parked", response_model=List[schemas.ParkedVehicleResponse])
 def get_parked_vehicles(db: Session = Depends(get_db)):
-    # Faz JOIN entre ParkingTicket e Vehicle, carregando os dados do veículo junto
     tickets_abertos = db.query(models.ParkingTicket)\
         .options(joinedload(models.ParkingTicket.vehicle))\
         .filter(models.ParkingTicket.check_out.is_(None))\
