@@ -15,6 +15,7 @@ pythonenv/
 *.sqlite
 *.sqlite3
 parking.db
+test.db
 
 # IDE
 .vscode/
