@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🅿️ Estacionamento do Dragão</title>
+    <!-- APENAS scripts necessários (HTMX e ícones) -->
+    <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <!-- Estilos totalmente separados -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">🅿️ Estacionamento do Dragão</h1>
+            <p class="subtitle">Instituto Nozes & Matemática Aplicada</p>
+        </header>
+
+        <div class="cards-grid">
+            <!-- Check-in -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-arrow-down icon-emerald"></i> Check-in (Entrada)
+                </h2>
+                <form id="checkin-form" 
+                      hx-post="/checkin" 
+                      hx-target="#result" 
+                      hx-swap="innerHTML">
+                    <div class="form-group">
+                        <label class="label">Placa</label>
+                        <input type="text" name="plate" id="plate" 
+                               class="input focus-emerald"
+                               placeholder="ABC-1234 ou ABC-1D23" required maxlength="8">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="label">Modelo</label>
+                            <input type="text" name="model" 
+                                   class="input"
+                                   placeholder="Gol, Uno..." required>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">Cor</label>
+                            <input type="text" name="color" 
+                                   class="input"
+                                   placeholder="Prata, Vermelho..." required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-emerald">
+                        ✅ Registrar Entrada
+                    </button>
+                </form>
+            </div>
+
+            <!-- Check-out -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-arrow-up icon-amber"></i> Check-out (Saída)
+                </h2>
+                <form id="checkout-form" 
+                      hx-post="/checkout" 
+                      hx-target="#result" 
+                      hx-swap="innerHTML">
+                    <div class="form-group">
+                        <label class="label">Placa do Veículo</label>
+                        <input type="text" name="plate" 
+                               class="input focus-amber"
+                               placeholder="ABC-1234" required maxlength="8">
+                    </div>
+                    <button type="submit" class="btn btn-amber">
+                        💰 Calcular e Registrar Saída
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Área de resultado -->
+        <div id="result" class="result-area"></div>
+
+        <!-- Veículos estacionados -->
+        <div class="parked-section">
+            <div class="parked-header">
+                <h2 class="parked-title">
+                    <i class="fas fa-car"></i> Veículos Estacionados Agora
+                </h2>
+                <button hx-get="/parked-html" 
+                        hx-target="#parked-list"
+                        hx-swap="innerHTML"
+                        class="refresh-btn">
+                    <i class="fas fa-sync"></i> Atualizar
+                </button>
+            </div>
+            <div id="parked-list" class="parked-grid">
+                <!-- Populado via HTMX -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Carrega a lista ao abrir a página
+        htmx.ajax('GET', '/parked-html', {target: '#parked-list'});
+        // Atualiza a cada 10 segundos
+        setInterval(() => {
+            htmx.ajax('GET', '/parked-html', {target: '#parked-list'});
+        }, 10000);
+    </script>
+</body>
+</html>
