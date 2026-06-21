@@ -7,9 +7,11 @@
 [![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-3120/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.138-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED.svg?logo=docker)](https://www.docker.com/)
+[![Deploy](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://parking-control-api.onrender.com)  
+*(substitua pela sua URL quando disponível)*
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-Uma API REST para controle de estacionamento que nasceu de uma discussão sobre **arredondamento de frações de hora** e **justiça temporal** – porque 15 minutos podem ser um presente ou uma armadilha.  
+Uma API REST e interface web para controle de estacionamento que nasceu de uma discussão sobre **arredondamento de frações de hora** e **justiça temporal** – porque 15 minutos podem ser um presente ou uma armadilha.  
 O Dragão de Óculos VR (agora também consultor de trânsito) garantiu que a regra fosse clara: **até 15 min é grátis**, depois disso, cada hora (ou fração) custa R$ 5,00.  
 A Diretoria aprovou, o Juiz dormiu e o código foi escrito.
 
@@ -28,12 +30,14 @@ A Diretoria aprovou, o Juiz dormiu e o código foi escrito.
 Tudo começou quando um Membro Honorário perguntou: *“Quanto custa ficar 1h02 num estacionamento?”*  
 O Dragão respondeu: *“R$ 10,00, porque arredondamos para cima.”*  
 Daí surgiu a pergunta seguinte: *“E se for 14 minutos?”* – *“Grátis, porque o Juiz está com sono.”*  
-E assim, a lógica virou código. Adicionamos validação de placas (padrão antigo e Mercosul), persistência em SQLite, testes com 100% de cobertura e um container Docker para rodar em qualquer lugar – inclusive no porta‑malas de um Fusca.
+E assim, a lógica virou código. Adicionamos validação de placas (padrão antigo e Mercosul), persistência em SQLite, testes com 100% de cobertura, uma interface web responsiva com **HTMX** e **CSS puro** (sem frameworks), e um container Docker para rodar em qualquer lugar – inclusive no porta‑malas de um Fusca.
 
 ---
 
 ## ✨ Funcionalidades
 
+- **Interface web interativa** (Jinja2 + HTMX) com formulários e lista dinâmica de veículos estacionados
+- **API REST** completa para integração
 - **Check-in** de veículos (cadastro automático se placa nova)
 - **Check-out** com cálculo de valor:
   - Até 15 minutos: **grátis** 🆓
@@ -65,7 +69,8 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-Acesse `http://localhost:8000/docs` para testar os endpoints no Swagger – o Dragão adora uma UI bonita.
+Interface web: `http://localhost:8000`  
+Documentação interativa (Swagger): `http://localhost:8000/docs`
 
 ### Usando Docker 🐳
 
@@ -76,7 +81,7 @@ docker run -d -p 8000:8000 --name parking-api parking-control-api
 docker-compose up -d
 ```
 
-Swagger disponível em `http://localhost:8000/docs`.
+Mesmos acessos: `http://localhost:8000` e `http://localhost:8000/docs`.
 
 ---
 
@@ -92,11 +97,22 @@ Resultado: 10 testes passando – todos validados pelo Departamento de Qualidade
 
 ## 📚 Endpoints
 
+### Interface Web (HTMX)
+
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| POST | `/checkin` | Registrar entrada (body: `VehicleCreate`) |
-| POST | `/checkout?plate=ABC-1234` | Registrar saída e calcular valor |
-| GET | `/parked` | Listar veículos estacionados |
+| GET | `/` | Página inicial completa |
+| POST | `/checkin` | Check‑in via formulário (retorna HTML) |
+| POST | `/checkout` | Check‑out via formulário (retorna HTML) |
+| GET | `/parked-html` | Lista de estacionados em HTML |
+
+### API REST (JSON)
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| POST | `/api/checkin` | Check‑in (body: `VehicleCreate`) |
+| POST | `/api/checkout?plate=ABC-1234` | Check‑out e cálculo do valor |
+| GET | `/api/parked` | Lista de veículos estacionados (JSON) |
 | GET | `/history/{plate}` | Histórico de tickets da placa |
 
 Exemplos de requisições no Swagger UI (`/docs`).
@@ -109,6 +125,9 @@ Exemplos de requisições no Swagger UI (`/docs`).
 - **SQLAlchemy** – ORM que transforma tabelas em poesia
 - **SQLite** – banco de dados leve, como um Fiat Uno
 - **Pydantic** – validação de dados, porque placa errada dá multa
+- **Jinja2** – templates para a interface web
+- **HTMX** – interatividade sem JavaScript complexo
+- **CSS Puro** – design escuro e responsivo, sem depender de frameworks
 - **Pytest** – testes que pegam até os 15 minutos mais suspeitos
 - **Docker** – containerização para rodar em qualquer vaga
 
