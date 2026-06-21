@@ -228,3 +228,73 @@ body {
         grid-template-columns: repeat(3, 1fr);
     }
 }
+
+/* =============================================
+   COMPONENTES DE FEEDBACK (check-in/check-out)
+   ============================================= */
+.alert {
+    padding: 1.5rem;           /* px-6 py-4 */
+    border-radius: 1rem;
+    border: 1px solid;
+    margin-top: 1rem;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.alert-success {
+    background-color: #064e3b; /* emerald-900 */
+    border-color: #10b981;     /* emerald-500 */
+    color: #6ee7b7;            /* emerald-300 */
+}
+
+.alert-error {
+    background-color: #7f1d1d; /* red-900 */
+    border-color: #ef4444;     /* red-500 */
+    color: #fca5a5;            /* red-300 */
+}
+
+.alert-warning {
+    background-color: #78350f; /* amber-900 */
+    border-color: #f59e0b;     /* amber-500 */
+    color: #fcd34d;            /* amber-300 */
+}
+
+/* =============================================
+   CARDS DE VEÍCULOS ESTACIONADOS
+   ============================================= */
+.parked-card {
+    background-color: #1e293b; /* slate-800 */
+    border: 1px solid #334155; /* slate-700 */
+    border-radius: 1rem;
+    padding: 1.25rem;          /* p-5 */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    transition: all 0.3s ease;
+}
+
+.parked-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+}
+
+.parked-plate {
+    font-size: 1.25rem;        /* text-xl */
+    font-weight: 700;
+    color: white;
+}
+
+.parked-model {
+    color: #94a3b8;            /* text-slate-400 */
+}
+
+.parked-time {
+    color: #34d399;            /* text-emerald-400 */
+    font-weight: 600;
+    text-align: right;
+}
+
+.parked-date {
+    font-size: 0.75rem;        /* text-xs */
+    color: #64748b;            /* text-slate-500 */
+    margin-top: 0.75rem;
+}

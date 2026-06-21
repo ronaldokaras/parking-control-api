@@ -65,7 +65,7 @@ def checkin_htmx(
     db.refresh(ticket)
 
     return f"""
-    <div class="bg-emerald-900 border border-emerald-500 text-emerald-300 px-6 py-4 rounded-2xl">
+    <div class="alert alert-success">
         ✅ <strong>Check-in realizado com sucesso!</strong><br>
         Placa: <strong>{plate}</strong> | {model} - {color}
     </div>
@@ -83,8 +83,7 @@ def checkout_htmx(
     
     if not vehicle:
         return f"""
-        <div class="bg-red-900 border border-red-500 text-red-300 px-6 py-4 rounded-2xl">
-            ❌ Veículo com placa <strong>{plate}</strong> não encontrado.
+        <div class="alert alert-error">❌ Placa inválida.
         </div>
         """
 
@@ -95,7 +94,7 @@ def checkout_htmx(
 
     if not active_ticket:
         return f"""
-        <div class="bg-amber-900 border border-amber-500 text-amber-300 px-6 py-4 rounded-2xl">
+        <div class="alert alert-warning">
             ⚠️ O veículo <strong>{plate}</strong> não está estacionado no momento.
         </div>
         """
@@ -118,7 +117,7 @@ def checkout_htmx(
     db.refresh(active_ticket)
 
     return f"""
-    <div class="bg-emerald-900 border border-emerald-500 text-emerald-300 px-6 py-4 rounded-2xl">
+    <div class="alert alert-success">
         💰 <strong>Check-out realizado!</strong><br>
         Placa: <strong>{plate}</strong><br>
         Tempo: {total_minutes} minutos<br>
@@ -142,17 +141,13 @@ def get_parked_vehicles_html(db: Session = Depends(get_db)):
     for t in tickets:
         minutes = int((now - t.check_in).total_seconds() / 60)
         html += f"""
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 card">
-            <div class="flex justify-between items-start">
-                <div>
-                    <div class="text-xl font-bold text-white">{t.vehicle.plate}</div>
-                    <div class="text-slate-400">{t.vehicle.model} • {t.vehicle.color}</div>
-                </div>
-                <div class="text-right">
-                    <div class="text-emerald-400 font-semibold">{minutes} min</div>
-                </div>
+        <div class="parked-card">
+            <div>
+                <div class="parked-plate">{t.vehicle.plate}</div>
+                <div class="parked-model">{t.vehicle.model} • {t.vehicle.color}</div>
             </div>
-            <div class="text-xs text-slate-500 mt-3">
+            <div class="parked-time">{minutes} min</div>
+            <div class="parked-date">
                 Entrada: {t.check_in.strftime("%d/%m/%Y %H:%M")}
             </div>
         </div>
