@@ -7,8 +7,7 @@
 [![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-3120/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.138-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED.svg?logo=docker)](https://www.docker.com/)
-[![Deploy](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://parking-control-api.onrender.com)  
-*(substitua pela sua URL quando disponível)*
+[![Deploy](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://parking-control-api.onrender.com)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
 Uma API REST e interface web para controle de estacionamento que nasceu de uma discussão sobre **arredondamento de frações de hora** e **justiça temporal** – porque 15 minutos podem ser um presente ou uma armadilha.  
