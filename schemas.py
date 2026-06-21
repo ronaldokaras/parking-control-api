@@ -1,20 +1,27 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, field_validator
 from datetime import datetime
 from typing import Optional
 import re
 
 class VehicleCreate(BaseModel):
-    plate: str = Field(
-        ...,
-        min_length=7,
-        max_length=8,
-        pattern=r'^[A-Za-z]{3}-(?:[0-9]{4}|[0-9][A-Za-z][0-9]{2})$',
-        description="Placa no formato AAA-1234 ou AAA-1B23"
-    )
+    plate: str
     model: str
     color: str
 
+    @field_validator('plate')
+    @classmethod
+    def validate_plate(cls, v: str) -> str:
+        v = v.strip().upper()
+        # Padrão antigo: ABC-1234 ou ABC1234
+        # Mercosul: ABC-1D23 ou ABC1D23
+        pattern = r'^[A-Z]{3}-?\d[A-Z0-9]\d{2}$'
+        if not re.match(pattern, v):
+            raise ValueError('Placa inválida. Use formato ABC-1234 ou ABC-1D23')
+        return v.replace('-', '') if len(v) == 7 else v  # normaliza sem hífen no BD se preferir
 
+    class Config:
+        from_attributes = True
+        
 class VehicleResponse(BaseModel):
     id: int
     plate: str
