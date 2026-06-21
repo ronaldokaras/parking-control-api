@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from jinja2 import Environment, FileSystemLoader   
 from sqlalchemy.orm import Session, joinedload
 from datetime import datetime
 from typing import List
@@ -19,9 +19,8 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Montagem de arquivos estáticos e templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+templates = Environment(loader=FileSystemLoader("templates"))  
 
 def get_db():
     db = SessionLocal()
@@ -30,11 +29,11 @@ def get_db():
     finally:
         db.close()
 
-
 # ===================== PÁGINA INICIAL =====================
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    template = templates.get_template("index.html")
+    return HTMLResponse(template.render({"request": request}))
 
 
 # ===================== ENDPOINTS PARA INTERFACE HTMX =====================

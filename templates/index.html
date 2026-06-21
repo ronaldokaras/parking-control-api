@@ -4,115 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🅿️ Estacionamento do Dragão</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- APENAS scripts necessários (HTMX e ícones) -->
     <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <style>
-        body { background: linear-gradient(135deg, #0f172a 0%, #1e2937 100%); }
-        .card { transition: all 0.3s ease; }
-        .card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
-    </style>
+    <!-- Estilos totalmente separados -->
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
-<body class="min-h-screen text-white">
-    <div class="max-w-6xl mx-auto p-6">
+<body>
+    <div class="container">
         <!-- Header -->
-        <div class="text-center mb-10">
-            <h1 class="text-5xl font-bold mb-2 flex items-center justify-center gap-3">
-                🅿️ Estacionamento do Dragão
-            </h1>
-            <p class="text-xl text-emerald-400">Instituto Nozes & Matemática Aplicada</p>
-        </div>
+        <header class="header">
+            <h1 class="title">🅿️ Estacionamento do Dragão</h1>
+            <p class="subtitle">Instituto Nozes & Matemática Aplicada</p>
+        </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="cards-grid">
             <!-- Check-in -->
-            <div class="card bg-slate-900 rounded-2xl p-8 border border-slate-700">
-                <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
-                    <i class="fas fa-arrow-down text-emerald-500"></i> Check-in (Entrada)
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-arrow-down icon-emerald"></i> Check-in (Entrada)
                 </h2>
                 <form id="checkin-form" 
                       hx-post="/checkin" 
                       hx-target="#result" 
                       hx-swap="innerHTML">
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm mb-1">Placa</label>
-                            <input type="text" name="plate" id="plate" 
-                                   class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-lg uppercase focus:outline-none focus:border-emerald-500"
-                                   placeholder="ABC-1234 ou ABC-1D23" required maxlength="8">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm mb-1">Modelo</label>
-                                <input type="text" name="model" 
-                                       class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3" 
-                                       placeholder="Gol, Uno..." required>
-                            </div>
-                            <div>
-                                <label class="block text-sm mb-1">Cor</label>
-                                <input type="text" name="color" 
-                                       class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3" 
-                                       placeholder="Prata, Vermelho..." required>
-                            </div>
-                        </div>
-                        <button type="submit"
-                                class="w-full bg-emerald-600 hover:bg-emerald-700 py-4 rounded-2xl text-lg font-semibold transition">
-                            ✅ Registrar Entrada
-                        </button>
+                    <div class="form-group">
+                        <label class="label">Placa</label>
+                        <input type="text" name="plate" id="plate" 
+                               class="input focus-emerald"
+                               placeholder="ABC-1234 ou ABC-1D23" required maxlength="8">
                     </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="label">Modelo</label>
+                            <input type="text" name="model" 
+                                   class="input"
+                                   placeholder="Gol, Uno..." required>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">Cor</label>
+                            <input type="text" name="color" 
+                                   class="input"
+                                   placeholder="Prata, Vermelho..." required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-emerald">
+                        ✅ Registrar Entrada
+                    </button>
                 </form>
             </div>
 
             <!-- Check-out -->
-            <div class="card bg-slate-900 rounded-2xl p-8 border border-slate-700">
-                <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
-                    <i class="fas fa-arrow-up text-amber-500"></i> Check-out (Saída)
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-arrow-up icon-amber"></i> Check-out (Saída)
                 </h2>
                 <form id="checkout-form" 
                       hx-post="/checkout" 
                       hx-target="#result" 
                       hx-swap="innerHTML">
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm mb-1">Placa do Veículo</label>
-                            <input type="text" name="plate" 
-                                   class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-lg uppercase focus:outline-none focus:border-amber-500"
-                                   placeholder="ABC-1234" required maxlength="8">
-                        </div>
-                        <button type="submit"
-                                class="w-full bg-amber-600 hover:bg-amber-700 py-4 rounded-2xl text-lg font-semibold transition">
-                            💰 Calcular e Registrar Saída
-                        </button>
+                    <div class="form-group">
+                        <label class="label">Placa do Veículo</label>
+                        <input type="text" name="plate" 
+                               class="input focus-amber"
+                               placeholder="ABC-1234" required maxlength="8">
                     </div>
+                    <button type="submit" class="btn btn-amber">
+                        💰 Calcular e Registrar Saída
+                    </button>
                 </form>
             </div>
         </div>
 
-        <!-- Result Area -->
-        <div id="result" class="mt-8"></div>
+        <!-- Área de resultado -->
+        <div id="result" class="result-area"></div>
 
-        <!-- Veículos Estacionados -->
-        <div class="mt-12">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-semibold flex items-center gap-3">
+        <!-- Veículos estacionados -->
+        <div class="parked-section">
+            <div class="parked-header">
+                <h2 class="parked-title">
                     <i class="fas fa-car"></i> Veículos Estacionados Agora
                 </h2>
-                <button hx-get="/parked" 
+                <button hx-get="/parked-html" 
                         hx-target="#parked-list"
                         hx-swap="innerHTML"
-                        class="bg-slate-700 hover:bg-slate-600 px-6 py-3 rounded-xl flex items-center gap-2">
+                        class="refresh-btn">
                     <i class="fas fa-sync"></i> Atualizar
                 </button>
             </div>
-            <div id="parked-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div id="parked-list" class="parked-grid">
                 <!-- Populado via HTMX -->
             </div>
         </div>
     </div>
 
     <script>
-        // Auto refresh parked list every 10s
+        // Carrega a lista ao abrir a página
+        htmx.ajax('GET', '/parked-html', {target: '#parked-list'});
+        // Atualiza a cada 10 segundos
         setInterval(() => {
-            htmx.trigger("#parked-list", "refresh");
+            htmx.ajax('GET', '/parked-html', {target: '#parked-list'});
         }, 10000);
     </script>
 </body>

@@ -1,0 +1,230 @@
+/* =============================================
+   ESTACIONAMENTO DO DRAGÃO – ESTILOS COMPLETOS
+   ============================================= */
+
+/* Reset básico e fundo */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0f172a;  /* slate-900 */
+    color: white;
+    min-height: 100vh;
+}
+
+/* Container principal */
+.container {
+    max-width: 72rem;   /* 6xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.5rem;    /* p-6 */
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 2.5rem;   /* mb-10 */
+}
+
+.title {
+    font-size: 3rem;          /* text-5xl */
+    font-weight: 700;         /* font-bold */
+    margin-bottom: 0.5rem;    /* mb-2 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.subtitle {
+    font-size: 1.25rem;       /* text-xl */
+    color: #34d399;           /* text-emerald-400 */
+}
+
+/* Grid principal (2 colunas em telas grandes) */
+.cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;                /* gap-8 */
+}
+
+@media (min-width: 1024px) {
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Cards */
+.card {
+    background-color: #0f172a;  /* bg-slate-900 */
+    border-radius: 1rem;        /* rounded-2xl */
+    padding: 2rem;              /* p-8 */
+    border: 1px solid #334155;  /* border-slate-700 */
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+}
+
+/* Títulos dos cards */
+.card-title {
+    font-size: 1.5rem;        /* text-2xl */
+    font-weight: 600;         /* font-semibold */
+    margin-bottom: 1.5rem;    /* mb-6 */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Ícones coloridos */
+.icon-emerald {
+    color: #10b981;   /* emerald-500 */
+}
+
+.icon-amber {
+    color: #f59e0b;   /* amber-500 */
+}
+
+/* Formulários */
+.form-group {
+    margin-bottom: 1rem;      /* space-y-4 (simplificado) */
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.label {
+    display: block;
+    font-size: 0.875rem;      /* text-sm */
+    margin-bottom: 0.25rem;   /* mb-1 */
+}
+
+/* Inputs padrão */
+.input {
+    width: 100%;
+    background-color: #1e293b; /* bg-slate-800 */
+    border: 1px solid #475569; /* border-slate-600 */
+    border-radius: 0.75rem;    /* rounded-xl */
+    padding: 0.75rem 1rem;     /* px-4 py-3 */
+    font-size: 1.125rem;       /* text-lg */
+    color: white;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    outline: none;
+}
+
+/* Estados de foco específicos */
+.input.focus-emerald:focus {
+    border-color: #10b981;     /* emerald-500 */
+}
+
+.input.focus-amber:focus {
+    border-color: #f59e0b;     /* amber-500 */
+}
+
+/* Botões */
+.btn {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 1rem;       /* rounded-2xl */
+    font-size: 1.125rem;       /* text-lg */
+    font-weight: 600;          /* font-semibold */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: white;
+}
+
+.btn-emerald {
+    background-color: #059669; /* emerald-600 */
+}
+
+.btn-emerald:hover {
+    background-color: #047857; /* emerald-700 */
+}
+
+.btn-amber {
+    background-color: #d97706; /* amber-600 */
+}
+
+.btn-amber:hover {
+    background-color: #b45309; /* amber-700 */
+}
+
+/* Área de resultado */
+.result-area {
+    margin-top: 2rem;          /* mt-8 */
+}
+
+/* Animação para mensagens de feedback */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#result > div {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Seção de veículos estacionados */
+.parked-section {
+    margin-top: 3rem;          /* mt-12 */
+}
+
+.parked-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;     /* mb-6 */
+}
+
+.parked-title {
+    font-size: 1.875rem;       /* text-3xl */
+    font-weight: 600;          /* font-semibold */
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Botão de atualizar */
+.refresh-btn {
+    background-color: #334155; /* bg-slate-700 */
+    padding: 0.75rem 1.5rem;   /* px-6 py-3 */
+    border-radius: 0.75rem;    /* rounded-xl */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.refresh-btn:hover {
+    background-color: #475569; /* bg-slate-600 */
+}
+
+/* Grid de veículos (3 colunas em desktop) */
+.parked-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;                 /* gap-4 */
+}
+
+@media (min-width: 768px) {
+    .parked-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .parked-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
