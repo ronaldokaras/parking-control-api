@@ -39,6 +39,7 @@ E assim, a lógica virou código. Adicionamos validação de placas (padrão ant
 - **Interface web interativa** (Jinja2 + HTMX) com formulários e lista dinâmica de veículos estacionados
 - **API REST** completa para integração
 - **Check-in** de veículos (cadastro automático se placa nova)
+- **Bloqueio de check-in duplicado** – impede que um veículo já estacionado entre novamente
 - **Check-out** com cálculo de valor:
   - Até 15 minutos: **grátis** 🆓
   - Acima de 15 minutos: R$ 5,00 por hora (arredondado para cima)

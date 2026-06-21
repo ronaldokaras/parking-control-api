@@ -47,9 +47,8 @@ def checkin_htmx(
 ):
     plate = plate.strip().upper()
     
-    # Validação básica (pode ser melhorada depois)
     if not plate:
-        return '<div class="bg-red-900 border border-red-500 text-red-300 px-6 py-4 rounded-2xl">❌ Placa inválida.</div>'
+        return '<div class="alert alert-error">❌ Placa inválida.</div>'
     
     vehicle = db.query(models.Vehicle).filter(models.Vehicle.plate == plate).first()
     
@@ -58,6 +57,19 @@ def checkin_htmx(
         db.add(vehicle)
         db.commit()
         db.refresh(vehicle)
+
+    # Verifica se o veículo já está estacionado
+    active_ticket = db.query(models.ParkingTicket).filter(
+        models.ParkingTicket.vehicle_id == vehicle.id,
+        models.ParkingTicket.check_out.is_(None)
+    ).first()
+
+    if active_ticket:
+        return f"""
+        <div class="alert alert-warning">
+            ⚠️ Veículo <strong>{plate}</strong> já está estacionado!
+        </div>
+        """
 
     ticket = models.ParkingTicket(vehicle_id=vehicle.id)
     db.add(ticket)
@@ -83,7 +95,8 @@ def checkout_htmx(
     
     if not vehicle:
         return f"""
-        <div class="alert alert-error">❌ Placa inválida.
+        <div class="alert alert-error">
+            ❌ Veículo com placa <strong>{plate}</strong> não encontrado.
         </div>
         """
 
@@ -136,7 +149,7 @@ def get_parked_vehicles_html(db: Session = Depends(get_db)):
     html = ""
     
     if not tickets:
-        return '<div class="text-slate-400 text-center py-8">Nenhum veículo estacionado no momento.</div>'
+        return '<div class="parked-empty">Nenhum veículo estacionado no momento.</div>'
     
     for t in tickets:
         minutes = int((now - t.check_in).total_seconds() / 60)
@@ -158,7 +171,6 @@ def get_parked_vehicles_html(db: Session = Depends(get_db)):
 # ===================== API REST (JSON) PARA TESTES E INTEGRAÇÃO =====================
 @app.post("/api/checkin", response_model=schemas.TicketResponse)
 def checkin_api(vehicle_data: schemas.VehicleCreate, db: Session = Depends(get_db)):
-    # Converter placa para maiúsculo
     vehicle_data.plate = vehicle_data.plate.upper()
     existing_vehicle = db.query(models.Vehicle).filter(models.Vehicle.plate == vehicle_data.plate).first()
     
@@ -169,6 +181,14 @@ def checkin_api(vehicle_data: schemas.VehicleCreate, db: Session = Depends(get_d
         db.add(vehicle)
         db.commit()
         db.refresh(vehicle)
+
+    # Verifica ticket duplicado (consistência com a interface)
+    active_ticket = db.query(models.ParkingTicket).filter(
+        models.ParkingTicket.vehicle_id == vehicle.id,
+        models.ParkingTicket.check_out.is_(None)
+    ).first()
+    if active_ticket:
+        raise HTTPException(status_code=400, detail="Veículo já está estacionado")
 
     new_ticket = models.ParkingTicket(vehicle_id=vehicle.id)
     db.add(new_ticket)
